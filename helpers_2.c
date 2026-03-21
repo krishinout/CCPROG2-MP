@@ -1,9 +1,9 @@
 /******************************************************************************
- *  Description     : <short description of the file>
- *  Author/s        : <student1 full name (last name, first name)>
- *                    <student2 full name (last name, first name)>
- *  Section         : <your section>
- *  Last Modified   : <date when last revision was made>
+ *  Description     : Helper functions for the Mantis card game
+ *  Author/s        : Danieles, Maricon
+ *                    Suazon, Krisha Geane A.
+ *  Section         : S12A & S22A
+ *  Last Modified   : March 12, 2026
  ******************************************************************************/
 
 #ifndef HELPERS_2_C // Include this to prevent redefinition error
@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "defs.h"
+
 
 /******************************************************************************
  * NOTE: These functions are placed here in helpers_2.c to demonstrate code
@@ -62,6 +64,89 @@ void shuffle(void *array, size_t n, size_t elem_size, unsigned int seed)
     memcpy(arr + i * elem_size, arr + j * elem_size, elem_size);
     memcpy(arr + j * elem_size, temp, elem_size);
   }
+}
+
+/**
+ * Verifies if created username is unique and does not exceed 36 characters
+ * @param playerList is a data struct array that represents the list of existing players and their information
+ * @param playerCount is an integer pointer that represents the number of existing players
+ * @param newUsername is a string that represents the newly created username
+ * @return 0 if username is NOT valid and 1 if otherwise
+ */
+int IsUsernameValid(PlayerRecord playerList, int playerCount, char newUsername[]) // no need to dereference since di naman imomodify value ng playerCount
+{
+  int i, valid = 1;
+
+  if (strlen(newUsername)>MAX_USERNAME) // first checks if username doesnt exceed 36 char
+      valid = 0;
+
+  for(i=0; i< playerCount; i++)
+    if(strcmp(playerList.username, newUsername) == 0)
+      valid = 0;
+
+  return valid;
+}
+
+/**
+ * Adds new player to player list
+ * @param playerList is data struct array that represents the list of existing players and their information
+ * @param playerCount is an integer pointer that represents the number of existing players
+ */
+void addNewPlayer(playerStats playerList[], int *playerCount)
+{
+  char newUsername[MAX_USERNAME+1];
+  int addedPlayer = 0;
+
+  do // uses do to repeat until valid na username and player is added succesfully
+  {
+    printf("Enter new username: ");
+    scanf("%s", newUsername);
+
+    if(IsUsernameValid(playerList, *playerCount, newUsername) == 0) // calls function to validate username
+      printf("Username is invalid. Please Try Again.\n");
+
+    else
+    {
+      strcpy(playerList[*playerCount].username, newUsername); // doesn't do assignment agad since need to set every other element to 0
+      playerList[*playerCount].wins = 0;
+      playerList[*playerCount].games = 0;
+      playerList[*playerCount].highestScore = 0;
+      (*playerCount)++; 
+      addedPlayer = 1;
+    }
+  }while(addedPlayer == 0);
+}
+
+void addPlayer(GamePlayer game_players[], PlayerRecord players[], int* count, const char* username)
+{
+  valid = 0;
+      do {
+        printf("Enter new username (max %d chars): ", MAX_USERNAME - 1);
+        fgets(username, sizeof(username), stdin);
+        username[strcspn(username, "\n")] = 0;
+        
+        if (strlen(username) == 0) {
+          iSetColor(I_COLOR_RED);
+          printf("Username cannot be empty.\n");
+          iSetColor(I_COLOR_WHITE);
+        } else if (strlen(username) >= MAX_USERNAME) {
+          iSetColor(I_COLOR_RED);
+          printf("Username too long. Max %d characters.\n", MAX_USERNAME - 1);
+          iSetColor(I_COLOR_WHITE);
+        } else if (findPlayer(players, player_count, username) >= 0) {
+          iSetColor(I_COLOR_RED);
+          printf("Username already exists. Choose another.\n");
+          iSetColor(I_COLOR_WHITE);
+        } else {
+          valid = 1;
+        }
+      } while (valid == 0);
+
+  strcpy(game_players[i].username, username);
+      game_players[i].tank_count = 0;
+      game_players[i].score_count = 0;
+      game_players[i].score_points = 0;
+      game_players[i].is_new = 1;
 }
 
 #endif // HELPERS_2_C; Include this to prevent redefinition error

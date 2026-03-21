@@ -1,9 +1,9 @@
 /******************************************************************************
- *  Description     : <short description of the file>
- *  Author/s        : <student1 full name (last name, first name)>
- *                    <student2 full name (last name, first name)>
- *  Section         : <your section>
- *  Last Modified   : <date when last revision was made>
+ *  Description     : Helper functions for the Mantis card game
+ *  Author/s        : Danieles, Maricon
+ *                    Suazon, Krisha Geane A.
+ *  Section         : S12A & S22A
+ *  Last Modified   : March 12, 2026
  ******************************************************************************/
 
 #ifndef HELPERS_1_C // Include this to prevent redefinition error
@@ -21,20 +21,20 @@
  * if it better fits your code organization.
  ******************************************************************************/
 
-/**
- * Displays the array of coordinates
- * @param points The array of coordinates to be displayed
- * @param arrSize The size of the array
- */
-void displayCoodinates(Coordinate points[], int arrSize)
+ void displayGameTitle()
 {
-  // NOTE: This file includes defs.h, which provides access to the
-  //       Coordinate structure definition.
-
-  for (int i = 0; i < arrSize; i++)
-    printf("(%d, %d)  ", points[i].x, points[i].y);
-
-  printf("\n\n");
+  iSetColor(I_COLOR_YELLOW);
+  printf("    ##    ##   ###    ##    ##  ######  ###### ######\n");
+  iSetColor(I_COLOR_YELLOW);
+  printf("    ###  ###  ##  ##  ###   ##    ##      ##   ##    \n");
+  iSetColor(I_COLOR_YELLOW);
+  printf("    ## ## ##  ######  ## ## ##    ##      ##   ######\n");    
+  iSetColor(I_COLOR_YELLOW);
+  printf("    ##    ##  ##  ##  ##   ###    ##      ##       ##\n");  
+  iSetColor(I_COLOR_YELLOW); 
+  printf("    ##    ##  ##  ##  ##    ##    ##    #####  ######\n\n");
 }
+
+
 
 #endif // HELPERS_1_C; Include this to prevent redefinition error
