@@ -66,87 +66,180 @@ void shuffle(void *array, size_t n, size_t elem_size, unsigned int seed)
   }
 }
 
-/**
- * Verifies if created username is unique and does not exceed 36 characters
- * @param playerList is a data struct array that represents the list of existing players and their information
- * @param playerCount is an integer pointer that represents the number of existing players
- * @param newUsername is a string that represents the newly created username
- * @return 0 if username is NOT valid and 1 if otherwise
- */
-int IsUsernameValid(PlayerRecord playerList, int playerCount, char newUsername[]) // no need to dereference since di naman imomodify value ng playerCount
+//for design display header
+void displayHeader(const char* title)
 {
-  int i, valid = 1;
-
-  if (strlen(newUsername)>MAX_USERNAME) // first checks if username doesnt exceed 36 char
-      valid = 0;
-
-  for(i=0; i< playerCount; i++)
-    if(strcmp(playerList.username, newUsername) == 0)
-      valid = 0;
-
-  return valid;
+  printf("\n");
+  iSetColor(I_COLOR_CYAN);
+  printf("╔");
+  for (int i = 0; i < 53; i++) {
+    printf("═");
+  }
+  printf("╗\n");
+  
+  printf("║");
+  iSetColor(I_COLOR_YELLOW);
+  printf("%-53s", title);
+  iSetColor(I_COLOR_CYAN);
+  printf("║\n");
+  
+  printf("╚");
+  for (int i = 0; i < 53; i++) {
+    printf("═");
+  }
+  printf("╝\n");
+  iSetColor(I_COLOR_WHITE);
+  printf("\n");
 }
 
-/**
- * Adds new player to player list
- * @param playerList is data struct array that represents the list of existing players and their information
- * @param playerCount is an integer pointer that represents the number of existing players
- */
-void addNewPlayer(playerStats playerList[], int *playerCount)
+Color charToColor(char c)
 {
-  char newUsername[MAX_USERNAME+1];
-  int addedPlayer = 0;
+  Color color;
+  
+  if (c == 'R') {
+    color = RED;
+  } else if (c == 'O') {
+    color = ORANGE;
+  } else if (c == 'Y') {
+    color = YELLOW;
+  } else if (c == 'G') {
+    color = GREEN;
+  } else if (c == 'B') {
+    color = BLUE;
+  } else if (c == 'I') {
+    color = INDIGO;
+  } else if (c == 'V') {
+    color = VIOLET;
+  } else {
+    color = RED;
+  }
+  
+  return color;
+}
 
-  do // uses do to repeat until valid na username and player is added succesfully
+int getColorIndex(char front)
+{
+  int index;
+  
+  if (front == 'R') {
+    index = 0;
+  } else if (front == 'O') {
+    index = 1;
+  } else if (front == 'Y') {
+    index = 2;
+  } else if (front == 'G') {
+    index = 3;
+  } else if (front == 'B') {
+    index = 4;
+  } else if (front == 'I') {
+    index = 5;
+  } else if (front == 'V') {
+    index = 6;
+  } else {
+    index = 0;
+  }
+  
+  return index;
+}
+
+void waitForEnter()
+{
+  char c;
+  
+  printf("\nPress Enter to continue...");
+  c = getchar();
+  while (c != '\n') {
+    c = getchar();
+  }
+  getchar();
+}
+
+
+// sorts player list by wins
+void sortByWins(PlayerRecord players[], int* playerCount) {
+  int i, j, max;
+  PlayerRecord temp;
+
+  for(i=0; i < *playerCount-1; i++)
   {
-    printf("Enter new username: ");
-    scanf("%s", newUsername);
+    max = i;
 
-    if(IsUsernameValid(playerList, *playerCount, newUsername) == 0) // calls function to validate username
-      printf("Username is invalid. Please Try Again.\n");
-
-    else
+    for(j=i+1; j < *playerCount; j++)
     {
-      strcpy(playerList[*playerCount].username, newUsername); // doesn't do assignment agad since need to set every other element to 0
-      playerList[*playerCount].wins = 0;
-      playerList[*playerCount].games = 0;
-      playerList[*playerCount].highestScore = 0;
-      (*playerCount)++; 
-      addedPlayer = 1;
+      if(players[max].games_won < players[j].games_won)
+        max = j;
     }
-  }while(addedPlayer == 0);
+
+    if(i != max) {
+      temp = players[i];
+      players[i] = players[max];
+      players[max] = temp;
+    }
+  }
 }
 
-void addPlayer(GamePlayer game_players[], PlayerRecord players[], int* count, const char* username)
+// sorts player list by highest score
+void sortByScores(PlayerRecord players[], int* playerCount) {
+  int i, j, max;
+  PlayerRecord temp;
+
+  for(i=0; i< *playerCount - 1; i++)
+  {
+    max = i;
+
+    for(j=i+1; j< *playerCount; j++)
+    {
+      if(players[max].highest_score < players[j].highest_score)
+        max = j;
+    }
+
+    if(i != max)
+    {
+      temp = players[i];
+      players[i] = players[max];
+      players[max] = temp;
+    }
+  }
+}
+
+
+int findPlayer(PlayerRecord players[], int count, const char* username)
 {
-  valid = 0;
-      do {
-        printf("Enter new username (max %d chars): ", MAX_USERNAME - 1);
-        fgets(username, sizeof(username), stdin);
-        username[strcspn(username, "\n")] = 0;
-        
-        if (strlen(username) == 0) {
-          iSetColor(I_COLOR_RED);
-          printf("Username cannot be empty.\n");
-          iSetColor(I_COLOR_WHITE);
-        } else if (strlen(username) >= MAX_USERNAME) {
-          iSetColor(I_COLOR_RED);
-          printf("Username too long. Max %d characters.\n", MAX_USERNAME - 1);
-          iSetColor(I_COLOR_WHITE);
-        } else if (findPlayer(players, player_count, username) >= 0) {
-          iSetColor(I_COLOR_RED);
-          printf("Username already exists. Choose another.\n");
-          iSetColor(I_COLOR_WHITE);
-        } else {
-          valid = 1;
-        }
-      } while (valid == 0);
-
-  strcpy(game_players[i].username, username);
-      game_players[i].tank_count = 0;
-      game_players[i].score_count = 0;
-      game_players[i].score_points = 0;
-      game_players[i].is_new = 1;
+  int index = -1;
+  int i = 0;
+  
+  while (i < count && index == -1) {
+    if (strcmp(players[i].username, username) == 0) {
+      index = i;
+    }
+    i++;
+  }
+  
+  return index;
 }
+
+int savePlayers(PlayerRecord players[], int count)
+{
+  FILE* fp = fopen("players.txt", "w");
+  int result;
+  
+  if (fp == NULL) {
+    result = 0;
+  } else {
+    for (int i = 0; i < count; i++) {
+      fprintf(fp, "%s|%d|%d\n", 
+              players[i].username, 
+              players[i].games_won, 
+              players[i].highest_score);
+    }
+    
+    fclose(fp);
+    result = 1;
+  }
+  
+  return result;
+}
+
+
 
 #endif // HELPERS_2_C; Include this to prevent redefinition error

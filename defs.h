@@ -17,10 +17,10 @@
  ******************************************************************************/
 
  /* ==================== Constants ==================== */
-#define MAX_PLAYERS 50
+#define MAX_PLAYERS_FILE 50
 #define MAX_USERNAME 36
 #define MIN_PLAYERS 3
-#define MAX_PLAYERS_GAME 6
+#define MAX_PLAYERS 6
 #define DECK_SIZE 84
 #define HAND_SIZE 4
 #define COLORS 7
@@ -62,7 +62,7 @@ typedef struct {
  * Represents a player in an active game
  */
 typedef struct {
-    playerRecord *player;               // Player's username
+    char username[MAX_USERNAME];              // Player's username
     Card tank[MAX_CARDS_PER_PLAYER];    // Tank pile cards
     int tank_count;                      // Number of cards in tank
     Card score[MAX_CARDS_PER_PLAYER];    // Score pile cards
@@ -77,7 +77,7 @@ typedef struct {
 typedef struct {
     Card deck[DECK_SIZE];                    // The deck of cards
     int deck_size;                            // Current deck size
-    GamePlayer players[MAX_PLAYERS_GAME];     // Players in current game
+    GamePlayer players[MAX_PLAYERS];     // Players in current game
     int player_count;                          // Number of players in game
     int winning_points;                        // Points needed to win
     int current_player;                        // Index of current player
@@ -96,14 +96,14 @@ typedef struct
 } playerStats; // to create full player list and current player list
 
 /**
- * Represents each in game player's stats
- */
+* Represents game settings that are adjustable
+*/
 typedef struct
 {
-  playerStats *igPlayer; // pointer to player stats since need to update after the game
-  tankPile tank; // cards in their tank pile
-  scorePile score; // cards in their score pile
-} currentPlayerStats;
+  int winningPoints;
+  int customSeed;
+  unsigned int seed;
 
+} GameSettings;
 
 #endif // DEFS_H; Include this to prevent redefinition error
