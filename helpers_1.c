@@ -610,7 +610,7 @@ void displayByScores(PlayerRecord players[], int *playerCount) {
   printf("==========================================================\n\n");
 
   for(i=0; i<*playerCount; i++)
-    printf("%d. %s \t\t %d wins\n", i+1, players[i].username, players[i].highest_score);
+    printf("%d. %s \t\t %d scores\n", i+1, players[i].username, players[i].highest_score);
 
   printf("==========================================================\n\n");
 }
@@ -653,7 +653,7 @@ void adjustSettings(GameState *state, GameSettings *settings) {
     state->winning_points = settings->winningPoints;
   }
 
-  else if(choice == 1) {
+  else if(choice == 2) {
     printf("Enter seed (0 for random): ");
     scanf("%u", &settings->seed);
     settings->customSeed = (settings->seed != 0);

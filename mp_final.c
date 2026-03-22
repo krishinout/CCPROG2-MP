@@ -202,8 +202,12 @@ void displayTopScorers(PlayerRecord player[], int playerCount) {
 
   if(choice == 1){
     displayByScores(player, &playerCount);
-  } else if (choice == 2){
+    waitForEnter();
+  }
+  
+  else if (choice == 2){
     displayByWins(player, &playerCount);}
+    waitForEnter();
 }
 
 
