@@ -587,8 +587,6 @@ void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount)
 void displayByWins(PlayerRecord players[], int *playerCount) {
   int i;
 
-  
-
   sortByWins(players, playerCount);
 
   displayHeader("TOP PLAYERS!");
@@ -616,7 +614,7 @@ void displayByScores(PlayerRecord players[], int *playerCount) {
 }
 
 // adjusts shuffling seed and winning points
-void adjustSettings(GameState *state, GameSettings *settings) {
+void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings) {
   int choice;
 
   iClear(0, 0, 200, 50);
@@ -650,14 +648,20 @@ void adjustSettings(GameState *state, GameSettings *settings) {
     }while(settings->winningPoints < 1 || settings->winningPoints > 100);
 
     printf("Winning points set to %d", settings->winningPoints);
-    state->winning_points = settings->winningPoints;
+    *winningPoints = settings->winningPoints;
+    printf("\n");
+      waitForEnter();
   }
 
   else if(choice == 2) {
     printf("Enter seed (0 for random): ");
     scanf("%u", &settings->seed);
     settings->customSeed = (settings->seed != 0);
+
     printf("Seed set to %s.\n\n", settings->customSeed ? "custom" : "random");
+    *shuffleSeed = (int)settings->customSeed;
+    printf("\n");
+      waitForEnter();
   }
 }
 

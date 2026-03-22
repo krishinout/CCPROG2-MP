@@ -185,8 +185,8 @@ void playGame(PlayerRecord players[], int* playerCount, int winningPoints, int s
 void displayTopScorers(PlayerRecord player[], int playerCount) {
   int choice;
 
- // iClear(0, 0, 200, 50);
- // iMoveCursor(0, 0);
+  iClear(0, 0, 200, 50);
+  iMoveCursor(0, 0);
 
   printf("[1] Display By Highest Score\n");
   printf("[2] Display By Highest Win\n");
@@ -206,8 +206,9 @@ void displayTopScorers(PlayerRecord player[], int playerCount) {
   }
   
   else if (choice == 2){
-    displayByWins(player, &playerCount);}
+    displayByWins(player, &playerCount);
     waitForEnter();
+  }
 }
 
 
@@ -217,6 +218,7 @@ void displayTopScorers(PlayerRecord player[], int playerCount) {
 int main()
 {
   PlayerRecord players[MAX_PLAYERS_FILE];
+  GameSettings settings;
   int playerCount = 0;
   int winningPoints;
   int shuffleSeed;
@@ -241,7 +243,7 @@ int main()
 
 
     } else if (choice == 3) {
-      printf("settings");
+      adjustSettings(&winningPoints, &shuffleSeed, &settings);
 
     }
   } while (choice != 4);
