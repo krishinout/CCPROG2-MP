@@ -588,14 +588,18 @@ void displayByWins(PlayerRecord players[], int *playerCount) {
   int i;
 
   sortByWins(players, playerCount);
+ 
+  iClear(0, 0, 200, 50);
+  iMoveCursor(0, 0);
 
+  displayGameTitle();
   displayHeader("TOP PLAYERS!");
-  printf("==========================================================\n\n");
+  printf("=======================================================\n");
 
   for(i=0; i<*playerCount; i++)
-    printf("%d. %s \t\t %d wins\n", i+1, players[i].username, players[i].games_won);
+    printf("[%d] %-36s %7d wins\n", i+1, players[i].username, players[i].games_won);
 
-  printf("==========================================================\n\n");
+  printf("=======================================================\n\n");
 }
 
 //displays top players based on highest scores
@@ -604,13 +608,17 @@ void displayByScores(PlayerRecord players[], int *playerCount) {
 
   sortByScores(players, playerCount);
 
+  iClear(0, 0, 200, 50);
+  iMoveCursor(0, 0);
+
+  displayGameTitle();
   displayHeader("TOP PLAYERS!");
-  printf("==========================================================\n\n");
+  printf("=======================================================\n");
 
   for(i=0; i<*playerCount; i++)
-    printf("%d. %s \t\t %d scores\n", i+1, players[i].username, players[i].highest_score);
+    printf("[%d] %-36s %7d scores\n", i+1, players[i].username, players[i].highest_score);
 
-  printf("==========================================================\n\n");
+  printf("=======================================================\n\n");
 }
 
 // adjusts shuffling seed and winning points
@@ -620,8 +628,14 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
   iClear(0, 0, 200, 50);
   iMoveCursor(0, 0);
 
-  printf("Current winning points: %d\n", settings->winningPoints);
+  displayGameTitle();
+  displayHeader("SETTINGS");
+
+  iSetColor(I_COLOR_GREEN);
+  printf("Current winning points: %d\n", *winningPoints);
+  iSetColor(I_COLOR_PURPLE);
   printf("Current seed: random\n\n");
+  iSetColor(I_COLOR_WHITE);
 
   printf("[1] Modify winning points (1-100)\n");
   printf("[2] Modify shuffling seed\n");
@@ -629,14 +643,11 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
 
   do
   {
-    printf(">> ");
+    printf("\n>> ");
     scanf("%d", &choice);
 
-    if(choice < 1 || choice > 3) {
-      iSetColor(I_COLOR_RED);
-      printf("\nInvalid choice. Please try again.\n\n");
-      iSetColor(I_COLOR_WHITE);
-    }
+    if(choice < 1 || choice > 3)
+      printf("Invalid choice. Please try again.\n");
 
   }while(choice < 1 || choice > 3);
 
@@ -646,11 +657,8 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
       printf("Enter new winning score: ");
       scanf("%d", &settings->winningPoints);
 
-      if(settings->winningPoints < 1 || settings->winningPoints > 100) {
-        iSetColor(I_COLOR_RED);
-        printf("\nInvalid input. Please try again.\n\n");
-        iSetColor(I_COLOR_WHITE);
-      }
+      if(settings->winningPoints < 1 || settings->winningPoints > 100)
+        printf("Invalid input. Please try again.\n");
     }while(settings->winningPoints < 1 || settings->winningPoints > 100);
 
     *winningPoints = settings->winningPoints;

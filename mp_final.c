@@ -148,7 +148,7 @@ void playGame(PlayerRecord players[], int* playerCount, int winningPoints, int s
     printf("%s's turn:\n", game.players[game.current_player].username);
     printf("[1] Try to Score\n");
     printf("[2] Try to Steal\n");
-    printf(">>");
+    printf("\n>>");
     scanf("%d", &choice);
 
     while(choice != 1 && choice != 2){
@@ -188,15 +188,23 @@ void displayTopScorers(PlayerRecord player[], int playerCount) {
   iClear(0, 0, 200, 50);
   iMoveCursor(0, 0);
 
+  displayGameTitle();
+  displayHeader("TOP PLAYERS!");
+  iSetColor(I_COLOR_PURPLE);
   printf("[1] Display By Highest Score\n");
+  iSetColor(I_COLOR_RED);
   printf("[2] Display By Highest Win\n");
+  iSetColor(I_COLOR_WHITE);
 
   do {
-    printf(">> ");
+    printf("\n>> ");
     scanf("%d", &choice);
 
-    if(choice < 1 || choice > 2)
+    if(choice < 1 || choice > 2) {
+      iSetColor(I_COLOR_RED);
       printf("Invalid choice. Please Try Again.\n");
+      iSetColor(I_COLOR_WHITE);
+    }
 
 }while(choice < 1 || choice > 2);
 
@@ -260,6 +268,6 @@ int main()
  * that I/we have not copied in part or whole or otherwise plagiarized the work of other
  * students and/or persons, nor did I employ the use of AI in any part of the deliverable.
  *
- * <student1 full name (last name, first name)> (DLSU ID# <number>)
+ * <Danieles, Maricon> (DLSU ID# 12507199)
  * <student2 full name (last name, first name)> (DLSU ID# <number>)
  */
