@@ -1,11 +1,12 @@
 /******************************************************************************
  *  Description     : Mantis Card Game - A text-based implementation of the 
  *                    Mantis card game by Exploding Kittens
- *  Author/s        : <student1 full name (last name, first name)>
- *                    <student2 full name (last name, first name)>
+ *  Author/s        : Danieles, Maricon
+ *                    Suazon, Krisha Geane A.
  *  Section         : S12A & S22A
- *  Last Modified   : March 25,2026
- *  Acknowledgments : <list of references used in the making of this project>
+ *  Last Modified   : March 26,2026
+ *  Acknowledgments : Based on Mantis game by Exploding Kittens,
+ *                    interface.c library for UI functions
  ******************************************************************************/
 
 /* ----- preprocessor directives ----- */
@@ -22,7 +23,9 @@
 
 /* ----- function implementations ----- */
 
-// displays the main menu (con)
+/**
+ * Displays the main menu with game options
+ * (Danieles)*/
 void displayMainMenu()
 {
   iClear(0, 0, 200, 50);
@@ -43,7 +46,13 @@ void displayMainMenu()
   printf("  Enter your choice: ");
 }
 
-//for the selection of players part in [1] New Game (geane + con)
+/**
+ * Selects players for the current game (new or existing)
+ * @param gamePlayers Array to store selected players for the game
+ * @param gameCount Pointer to store number of players in this game
+ * @param players Array of existing player records
+ * @param playerCount Pointer to number of existing players (may increase)
+ * (Danieles + Suazon)*/
 void SelectGamePlayers(GamePlayer gamePlayers[], int* gameCount, PlayerRecord players[], int* playerCount){
   int numPlayers;
   int i,j,k;
@@ -58,7 +67,7 @@ void SelectGamePlayers(GamePlayer gamePlayers[], int* gameCount, PlayerRecord pl
   printf("Number of players (%d-%d): ", MIN_PLAYERS, MAX_PLAYERS);
   scanf("%d", &numPlayers);
 
-//for validation of input
+// Validate number of players
   while (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS){
     iSetColor(I_COLOR_RED);
     printf("Invalid. Please enter %d-%d: ", MIN_PLAYERS, MAX_PLAYERS);
@@ -73,7 +82,7 @@ void SelectGamePlayers(GamePlayer gamePlayers[], int* gameCount, PlayerRecord pl
     printf("\nSelect Player %d:\n", i + 1);
     printf("[0] <Add new player>\n");
 
-    //for the display of existing players
+    //For the display of existing players
     for (j = 0; j < *playerCount; j++) {
       printf("[%d] %s\n", j + 1, players[j].username);
   }
@@ -127,7 +136,13 @@ void SelectGamePlayers(GamePlayer gamePlayers[], int* gameCount, PlayerRecord pl
   }
 }
 
-//playgame function
+/**
+ * Plays a complete game of Mantis
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players in records
+ * @param winningPoints Points needed to win
+ * @param shuffleSeed Seed for shuffling the deck
+ * (Danieles)*/
 void playGame(PlayerRecord players[], int* playerCount, int winningPoints, int shuffleSeed){
   GameState game;
   int choice;
@@ -180,8 +195,11 @@ void playGame(PlayerRecord players[], int* playerCount, int winningPoints, int s
   waitForEnter();
 }
 
-
-//top scorers function
+/**
+ * Displays menu for viewing top players (by wins or scores)
+ * @param player Array of player records
+ * @param playerCount Number of players in the records
+ * (Suazon)*/
 void displayTopScorers(PlayerRecord player[], int playerCount) {
   int choice;
 
@@ -219,8 +237,79 @@ void displayTopScorers(PlayerRecord player[], int playerCount) {
   }
 }
 
+/**
+ * Adjusts game settings (winning points and shuffle seed)
+ * @param winningPoints Pointer to current winning points
+ * @param shuffleSeed Pointer to current shuffle seed
+ * @param settings Pointer to game settings structure
+ * (Suazon)*/
+void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings) {
+  int choice;
 
-//settings function
+  iClear(0, 0, 200, 50);
+  iMoveCursor(0, 0);
+
+  printf("Current winning points: %d\n", settings->winningPoints);
+  printf("Current seed: random\n\n");
+
+  printf("[1] Modify winning points (1-100)\n");
+  printf("[2] Modify shuffling seed\n");
+  printf("[3] Return\n");
+
+  do
+  {
+    printf(">> ");
+    scanf("%d", &choice);
+
+    if(choice < 1 || choice > 3) {
+      iSetColor(I_COLOR_RED);
+      printf("\nInvalid choice. Please try again.\n\n");
+      iSetColor(I_COLOR_WHITE);
+    }
+
+  }while(choice < 1 || choice > 3);
+
+  if(choice == 1) {
+     do
+    {
+      printf("Enter new winning score: ");
+      scanf("%d", &settings->winningPoints);
+
+      if(settings->winningPoints < 1 || settings->winningPoints > 100) {
+        iSetColor(I_COLOR_RED);
+        printf("\nInvalid input. Please try again.\n\n");
+        iSetColor(I_COLOR_WHITE);
+      }
+    }while(settings->winningPoints < 1 || settings->winningPoints > 100);
+
+    *winningPoints = settings->winningPoints;
+    iSetColor(I_COLOR_GREEN);
+    printf("Winning points set to %d", *winningPoints);
+    iSetColor(I_COLOR_WHITE);
+    printf("\n");
+      waitForEnter();
+  }
+
+  else if(choice == 2) {
+    printf("Enter seed (0 for random): ");
+    scanf("%u", &settings->seed);
+
+    if(settings->seed == 0) {
+      *shuffleSeed = randomInt();
+      iSetColor(I_COLOR_GREEN);
+      printf("Seed set to random.\n\n");
+       iSetColor(I_COLOR_WHITE);
+    }
+
+    else {
+      *shuffleSeed = (int)settings->seed;
+      iSetColor(I_COLOR_GREEN);
+      printf("Seed set to %u.\n\n", settings->seed);
+       iSetColor(I_COLOR_WHITE);
+    }
+      waitForEnter();
+  }
+}
 
 
 int main()
@@ -269,5 +358,5 @@ int main()
  * students and/or persons, nor did I employ the use of AI in any part of the deliverable.
  *
  * <Danieles, Maricon> (DLSU ID# 12507199)
- * <student2 full name (last name, first name)> (DLSU ID# <number>)
+ * <Suazon, Krisha Geane A.> (DLSU ID# 12506427)
  */
