@@ -679,7 +679,6 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
        iSetColor(I_COLOR_WHITE);
     }
 
-    printf("\n");
       waitForEnter();
   }
 }
