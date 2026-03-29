@@ -3,7 +3,7 @@
  *  Author/s        : Danieles, Maricon
  *                    Suazon, Krisha Geane A.
  *  Section         : S12A & S22A
- *  Last Modified   : March 12, 2026
+ *  Last Modified   : March 25, 2026
  ******************************************************************************/
 
 #ifndef HELPERS_1_C // Include this to prevent redefinition error
@@ -23,6 +23,9 @@
  * if it better fits your code organization.
  ******************************************************************************/
 
+/**
+ * Displays the game title in ASCII art format
+ * (Suazon)*/
  void displayGameTitle()
 {
   iSetColor(I_COLOR_YELLOW);
@@ -37,7 +40,15 @@
   printf("    ##    ##  ##  ##  ##    ##    ##    #####  ######\n\n");
 }
 
-//for validating username (geane)
+/**
+ * Validates if a username is valid and unique
+ * @param players Array of existing player records
+ * @param playerCount Number of existing players
+ * @param newUsername Username to validate
+ * @return 1 if valid, 0 if invalid
+ * @pre players array contains valid player records
+ * @pre playerCount is the correct size of players array
+ * (Suazon)*/
 int IsUsernameValid(PlayerRecord players[], int playerCount, char newUsername[])
 {
   int i, valid = 1;
@@ -52,7 +63,15 @@ int IsUsernameValid(PlayerRecord players[], int playerCount, char newUsername[])
   return valid;
 }
 
-//for the user interface (con + geane)
+/**
+ * Adds a new player to the records and saves to file immediately
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players (will be incremented)
+ * @param newUsername Buffer to store the new username
+ * @return 1 if successful
+ * @pre players array has space for at least one more player
+ * @pre playerCount points to a valid integer less than MAX_PLAYERS_FILE
+ * (Danieles + Suazon)*/
 int AddNewPlayer(PlayerRecord players[], int* playerCount, char newUsername[])
 {
   int valid = 0;
@@ -72,13 +91,13 @@ int AddNewPlayer(PlayerRecord players[], int* playerCount, char newUsername[])
     }
   } while (valid == 0);
 
-  //adding the new username sa memory
+  // Add to memory
   strcpy(players[*playerCount].username, newUsername);
   players[*playerCount].games_won = 0;
   players[*playerCount].highest_score = 0;
   (*playerCount)++;
 
-  //saves the new username to the player.txt file
+  // Save to file immediately
   fp = fopen("players.txt", "w");
   if (fp != NULL){
     for (i=0; i < *playerCount; i++){
@@ -89,8 +108,7 @@ int AddNewPlayer(PlayerRecord players[], int* playerCount, char newUsername[])
     }
     fclose(fp);
   }
-
-
+ 
   iSetColor(I_COLOR_GREEN);
   printf("New player '%s' added!\n", newUsername);
   iSetColor(I_COLOR_WHITE);
@@ -98,7 +116,12 @@ int AddNewPlayer(PlayerRecord players[], int* playerCount, char newUsername[])
   return 1;
 }
 
-//loads the existing players from the players.txt file
+/**
+ * Loads existing players from players.txt file into memory
+ * @param players Array to store player records
+ * @param playerCount Pointer to store number of players loaded
+ * @pre players array has size at least MAX_PLAYERS_FILE
+ * (Danieles)*/
 void loadPlayers(PlayerRecord players[], int* playerCount){
   FILE* fp;
   int count=0;
@@ -127,7 +150,13 @@ void loadPlayers(PlayerRecord players[], int* playerCount){
   }
 }
 
-//loading the mantis.txt deck file
+/**
+ * Loads the deck from mantis.txt file
+ * @param deck Array to store cards
+ * @param filename Name of the file to load
+ * @return Number of cards loaded
+ * @pre deck array has size at least DECK_SIZE
+ * (Danieles)*/
 int loadDeck(Card deck[], const char* filename){
   FILE* fp;
   int count = 0;
@@ -154,7 +183,13 @@ int loadDeck(Card deck[], const char* filename){
   return count;
 }
 
-//draw card
+/**
+ * Draws the top card from the deck (index 0) and shifts remaining cards
+ * @param state Pointer to the game state
+ * @param card Pointer to store the drawn card
+ * @return 1 if successful, 0 if deck is empty
+ * @pre state is a valid GameState
+ * (Danieles))*/
 int DrawnCard(GameState* state, Card* card){
   int result = 0;
   int i;
@@ -174,7 +209,11 @@ int DrawnCard(GameState* state, Card* card){
   return result;
 }
 
-//for dealing initial 4 cards sa players
+/**
+ * Deals 4 initial cards to each player at the start of the game
+ * @param state Pointer to the game state
+ * @pre state contains valid players and a shuffled deck
+ * (Danieles)*/
 void dealInitialCards (GameState* state){
   int i, j;
   Card drawnCard;
@@ -189,7 +228,10 @@ void dealInitialCards (GameState* state){
   }
 }
 
-//displays card counts (con + geane)
+/**
+ * Displays a player's card counts in a colorful box format
+ * @param player Pointer to the player
+ * (Danieles + Suazon)*/
 void DisplayCardCounts(GamePlayer* player){
   int colorCounts[7] = {0};
   int i;
@@ -244,7 +286,10 @@ void DisplayCardCounts(GamePlayer* player){
 
 }
 
-//displays current gamestate
+/**
+ * Displays the current game state including all players' cards
+ * @param state Pointer to the game state
+ * (Danieles + Suazon)*/
 void DisplayGameState(GameState* state){
   int i;
   
@@ -269,7 +314,13 @@ void DisplayGameState(GameState* state){
     printf("\n");
 }
 
-//choosing target for stealing
+/**
+ * Prompts the current player to choose a target player to steal from
+ * @param state Pointer to the game state
+ * @param currentPlayer Index of current player
+ * @return Index of the chosen target player
+ * @pre currentPlayer is between 0 and state->player_count - 1
+ * (Danieles + Suazon)*/
 int ChooseTargetPlayer(GameState* state, int currentPlayer){
   int choice;
   int valid = 0;
@@ -301,7 +352,12 @@ int ChooseTargetPlayer(GameState* state, int currentPlayer){
   return choice;
 }
 
-//trying to score function of the game
+/**
+ * Handles the Try to Score action for a player
+ * @param state Pointer to the game state
+ * @param playerIndex Index of current player
+ * @return 1 if successful, 0 if deck is empty
+ * (Danieles + Suazon)*/
 int TryToScore(GameState*  state, int playerIndex){
   GamePlayer* player;
   int result, found, i, j, k;
@@ -335,7 +391,7 @@ int TryToScore(GameState*  state, int playerIndex){
           player->score_count++;
           player->score_points = player->score_points + player->tank[j].points;
 
-         //shifting of cards sa tank 
+         //Shifting of cards in tank 
           for(k=j; k <player->tank_count - 1; k++){
             player->tank[k] = player->tank[k+1];
           }
@@ -346,12 +402,12 @@ int TryToScore(GameState*  state, int playerIndex){
         }
     }
     
-  //just updates the score of the player  
+  //Updates the score of the player  
     player->score[player->score_count] = drawnCard;
     player->score_count++;
     player->score_points = player->score_points + drawnCard.points;
 
-  // displays the score earned
+  // Displays the score earned
     iSetColor(I_COLOR_GREEN);
       printf("SCORED! +%d points! Total: %d\n", drawnCard.points, player->score_points);
       iSetColor(I_COLOR_WHITE);
@@ -367,14 +423,19 @@ int TryToScore(GameState*  state, int playerIndex){
     }
   } else { 
     iSetColor(I_COLOR_RED);
-    printf("Draw pile is empty!\n"); //consideration na what if maubos yung draw pile
+    printf("Draw pile is empty!\n"); //Consideration if draw pile is empty
     iSetColor(I_COLOR_WHITE);
     result = 0;
   }
   return result;
 }
 
-//trying to steal function of the game
+/**
+ * Handles the Try to Steal action for a player
+ * @param state Pointer to the game state
+ * @param playerIndex Index of current player
+ * @return 1 if successful, 0 if deck is empty
+ * (Danieles + Suazon)*/
 int TryToSteal(GameState* state, int playerIndex){
   int targetIndex;
   GamePlayer* current;
@@ -399,7 +460,7 @@ int TryToSteal(GameState* state, int playerIndex){
     printf(" (Points: %d)\n", drawnCard.points);
 
 
-  //loop lang to look for the drawncard if may kamatch sa targeted player
+  //Loop to look for the drawncard if there is a match with the targeted player
     for(i=0; i<target->tank_count && found==0; i++){
       if (charToColor(target->tank[i].front) == drawnColor) {
       found = 1;
@@ -416,7 +477,7 @@ int TryToSteal(GameState* state, int playerIndex){
           current->tank_count++;
           stolenCount++;
 
-        //just shifting of cards sa tank ng target 
+        //Shifting of cards in the tank of the target 
           k=j;
           while(k < target->tank_count-1){
             target->tank[k] = target->tank[k+1];
@@ -452,7 +513,11 @@ int TryToSteal(GameState* state, int playerIndex){
   return result;
 }
 
-
+/**
+ * Checks if the game is over (winning points reached or deck empty)
+ * @param state Pointer to the game state
+ * @return 1 if game is over, 0 otherwise
+ * (Danieles + Suazon)*/
 int CheckGameOver(GameState* state){
   int gameOver = 0;
   int i;
@@ -470,20 +535,26 @@ int CheckGameOver(GameState* state){
   return gameOver;
 }
 
+/**
+ * Determines winner(s) when the deck is empty (tie-breaking by points then tank size)
+ * @param state Pointer to the game state
+ * @param winners Array to store winner indices
+ * @param winnerCount Pointer to store number of winners
+ * (Danieles + Suazon)*/
 void determineWinnerEmptyDeck(GameState* state, int winners[], int* winnerCount){
   int i, maxPoints=0;
   int tempCount=0;
   int maxTankCards;
   int tempWinners[MAX_PLAYERS];
   
-//to check kung ano ung highest score sa current players
+// Find highest score
   for(i=0; i< state->player_count;i++){
     if(state->players[i].score_points > maxPoints){
       maxPoints = state->players[i].score_points;
     }
   }
 
-// to check sino yung equal sa max points na meron
+// Collect players with max points
   for(i=0;i< state->player_count;i++){
     if (state->players[i].score_points == maxPoints){
       tempWinners[tempCount] = i;
@@ -494,12 +565,14 @@ void determineWinnerEmptyDeck(GameState* state, int winners[], int* winnerCount)
   if (tempCount > 1){
     maxTankCards = 0;
 
+   // Find highest tank size among tied players
     for(i=0; i<tempCount; i++){
       if(state->players[tempWinners[i]].tank_count > maxTankCards){
         maxTankCards = state->players[tempWinners[i]].tank_count;
       }
     }
 
+   // Collect players with max tank cards
     *winnerCount = 0;
     for(i=0; i<tempCount; i++){
       if(state->players[tempWinners[i]].tank_count == maxTankCards){
@@ -515,6 +588,12 @@ void determineWinnerEmptyDeck(GameState* state, int winners[], int* winnerCount)
   } 
 }
 
+/**
+ * Displays game results and updates player statistics
+ * @param state Pointer to the game state
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players in records
+ * (Danieles + Suazon)*/
 void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount){
   int i;
   int winners[MAX_PLAYERS];
@@ -534,7 +613,7 @@ void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount)
   }
   printf("\n");
 
-  //if naubos yung deck
+  // Determine winners
   if (state->deck_size <= 0){
     determineWinnerEmptyDeck(state, winners, &winnerCount);
   } else {
@@ -547,6 +626,7 @@ void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount)
     }
   }
 
+ // Display winner(s)
   if(winnerCount == 1){
     iSetColor(I_COLOR_YELLOW);
     printf("🏆 WINNER: %s with %d points! 🏆\n", 
@@ -563,8 +643,7 @@ void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount)
     iSetColor(I_COLOR_WHITE);
   }
 
-  //updates the players stats
-  //updates wins count
+  // Update wins for winners
   for(i=0; i<winnerCount; i++){
     playerIndex = findPlayer(players, *playerCount, state->players[winners[i]].username);
     if (playerIndex >= 0){
@@ -572,7 +651,7 @@ void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount)
     }
   }
 
-  //updates highest score count
+  // Update highest scores for all players
   for(i=0; i < state->player_count; i++){
     playerIndex = findPlayer(players, *playerCount, state->players[i].username);
     if (playerIndex >= 0){
@@ -583,7 +662,11 @@ void ShowGameResults(GameState* state, PlayerRecord players[], int* playerCount)
   }
 }
 
-// displays top players based on number of wins
+/**
+ * Displays top players sorted by number of wins
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players
+ * (Suazon)*/
 void displayByWins(PlayerRecord players[], int *playerCount) {
   int i;
 
@@ -598,7 +681,11 @@ void displayByWins(PlayerRecord players[], int *playerCount) {
   printf("==========================================================\n\n");
 }
 
-//displays top players based on highest scores
+/**
+ * Displays top players sorted by highest scores
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players
+ * (Suazon)*/
 void displayByScores(PlayerRecord players[], int *playerCount) {
   int i;
 
@@ -612,79 +699,5 @@ void displayByScores(PlayerRecord players[], int *playerCount) {
 
   printf("==========================================================\n\n");
 }
-
-// adjusts shuffling seed and winning points
-void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings) {
-  int choice;
-
-  iClear(0, 0, 200, 50);
-  iMoveCursor(0, 0);
-
-  printf("Current winning points: %d\n", settings->winningPoints);
-  printf("Current seed: random\n\n");
-
-  printf("[1] Modify winning points (1-100)\n");
-  printf("[2] Modify shuffling seed\n");
-  printf("[3] Return\n");
-
-  do
-  {
-    printf(">> ");
-    scanf("%d", &choice);
-
-    if(choice < 1 || choice > 3) {
-      iSetColor(I_COLOR_RED);
-      printf("\nInvalid choice. Please try again.\n\n");
-      iSetColor(I_COLOR_WHITE);
-    }
-
-  }while(choice < 1 || choice > 3);
-
-  if(choice == 1) {
-     do
-    {
-      printf("Enter new winning score: ");
-      scanf("%d", &settings->winningPoints);
-
-      if(settings->winningPoints < 1 || settings->winningPoints > 100) {
-        iSetColor(I_COLOR_RED);
-        printf("\nInvalid input. Please try again.\n\n");
-        iSetColor(I_COLOR_WHITE);
-      }
-    }while(settings->winningPoints < 1 || settings->winningPoints > 100);
-
-    *winningPoints = settings->winningPoints;
-    iSetColor(I_COLOR_GREEN);
-    printf("Winning points set to %d", *winningPoints);
-    iSetColor(I_COLOR_WHITE);
-    printf("\n");
-      waitForEnter();
-  }
-
-  else if(choice == 2) {
-    printf("Enter seed (0 for random): ");
-    scanf("%u", &settings->seed);
-
-    if(settings->seed == 0) {
-      *shuffleSeed = randomInt();
-      iSetColor(I_COLOR_GREEN);
-      printf("Seed set to random.\n\n");
-       iSetColor(I_COLOR_WHITE);
-    }
-
-    else {
-      *shuffleSeed = (int)settings->seed;
-      iSetColor(I_COLOR_GREEN);
-      printf("Seed set to %u.\n\n", settings->seed);
-       iSetColor(I_COLOR_WHITE);
-    }
-
-      waitForEnter();
-  }
-}
-
-
-
-
 
 #endif // HELPERS_1_C; Include this to prevent redefinition error
