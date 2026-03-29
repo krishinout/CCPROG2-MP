@@ -29,17 +29,17 @@
 
 /* ==================== Color Codes ==================== */
 typedef enum {
-    RED,        
-    ORANGE,     
-    YELLOW,     
-    GREEN,      
-    BLUE,       
-    INDIGO,     
-    VIOLET      
+    RED,        // Represents the color Red        
+    ORANGE,     // Represents the color Orange     
+    YELLOW,     // Represents the color Yellow
+    GREEN,      // Represents the color Green
+    BLUE,       // Represents the color Blue
+    INDIGO,     // Represents the color Indigo
+    VIOLET      // Represents the color Violet
 } Color;
 
 /**
- * Represents a Mantis card
+ * Represents a Mantis card with front color, back colors, and point value
  */
 typedef struct {
     char front;                 // Front color letter (R, O, Y, G, B, I, V)
@@ -53,22 +53,22 @@ typedef struct {
  * Represents a player in the persistent records (for file storage)
  */
 typedef struct {
-    char username[MAX_USERNAME];    // Player's username
-    int games_won;                   // Number of games won
-    int highest_score;               // Highest score achieved
+    char username[MAX_USERNAME];     // Player's username
+    int games_won;                   // Number of games won by the player
+    int highest_score;               // Highest score achieved by the player
 } PlayerRecord;
 
 /**
- * Represents a player in an active game
+ * Represents a player in an active game session
  */
 typedef struct {
-    char username[MAX_USERNAME];              // Player's username
-    Card tank[MAX_CARDS_PER_PLAYER];    // Tank pile cards
-    int tank_count;                      // Number of cards in tank
-    Card score[MAX_CARDS_PER_PLAYER];    // Score pile cards
-    int score_count;                      // Number of cards in score
+    char username[MAX_USERNAME];          // Player's username
+    Card tank[MAX_CARDS_PER_PLAYER];      // Tank pile cards (unscored cards)
+    int tank_count;                       // Number of cards in tank pile
+    Card score[MAX_CARDS_PER_PLAYER];     // Score pile cards (scored cards)
+    int score_count;                      // Number of cards in score pile
     int score_points;                     // Total points in score pile
-    int is_new;                           // Flag for new players
+    int is_new;                           // Flag for new players (1 if new, 0 if existing)
 } GamePlayer;
 
 /**
@@ -76,32 +76,21 @@ typedef struct {
  */
 typedef struct {
     Card deck[DECK_SIZE];                    // The deck of cards
-    int deck_size;                            // Current deck size
-    GamePlayer players[MAX_PLAYERS];     // Players in current game
-    int player_count;                          // Number of players in game
-    int winning_points;                        // Points needed to win
-    int current_player;                        // Index of current player
-    int game_over;                             // Game over flag
+    int deck_size;                           // Current number of cards in deck
+    GamePlayer players[MAX_PLAYERS];         // Players in current game
+    int player_count;                        // Number of players in current game
+    int winning_points;                      // Points needed to win the game
+    int current_player;                      // Index of current player
+    int game_over;                           // Flag indicating if game is over (1 if over)
 } GameState;
-
-/**
- * Represents player stats across the entire game
- */
-typedef struct
-{
-  char username[MAX_USERNAME+1];
-  int wins;
-  int games;
-  int highestScore;
-} playerStats; // to create full player list and current player list
 
 /**
 * Represents game settings that are adjustable
 */
 typedef struct
 {
-  int winningPoints;
-  unsigned int seed;
+  int winningPoints;    // Points required to win the game
+  unsigned int seed;    // Seed value for shuffling
 
 } GameSettings;
 
