@@ -101,7 +101,6 @@ typedef struct
 typedef struct
 {
   int winningPoints;
-  int customSeed;
   unsigned int seed;
 
 } GameSettings;

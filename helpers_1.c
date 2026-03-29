@@ -632,8 +632,11 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
     printf(">> ");
     scanf("%d", &choice);
 
-    if(choice < 1 || choice > 3)
-      printf("Invalid choice. Please try again.\n");
+    if(choice < 1 || choice > 3) {
+      iSetColor(I_COLOR_RED);
+      printf("\nInvalid choice. Please try again.\n\n");
+      iSetColor(I_COLOR_WHITE);
+    }
 
   }while(choice < 1 || choice > 3);
 
@@ -643,12 +646,17 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
       printf("Enter new winning score: ");
       scanf("%d", &settings->winningPoints);
 
-      if(settings->winningPoints < 1 || settings->winningPoints > 100)
-        printf("Invalid input. Please try again.\n");
+      if(settings->winningPoints < 1 || settings->winningPoints > 100) {
+        iSetColor(I_COLOR_RED);
+        printf("\nInvalid input. Please try again.\n\n");
+        iSetColor(I_COLOR_WHITE);
+      }
     }while(settings->winningPoints < 1 || settings->winningPoints > 100);
 
-    printf("Winning points set to %d", settings->winningPoints);
     *winningPoints = settings->winningPoints;
+    iSetColor(I_COLOR_GREEN);
+    printf("Winning points set to %d", *winningPoints);
+    iSetColor(I_COLOR_WHITE);
     printf("\n");
       waitForEnter();
   }
@@ -656,11 +664,21 @@ void adjustSettings(int *winningPoints, int *shuffleSeed, GameSettings *settings
   else if(choice == 2) {
     printf("Enter seed (0 for random): ");
     scanf("%u", &settings->seed);
-    settings->customSeed = (settings->seed != 0);
 
-    printf("Seed set to %s.\n\n", settings->customSeed ? "custom" : "random");
-    *shuffleSeed = (int)settings->customSeed;
-    printf("\n");
+    if(settings->seed == 0) {
+      *shuffleSeed = randomInt();
+      iSetColor(I_COLOR_GREEN);
+      printf("Seed set to random.\n\n");
+      iSetColor(I_COLOR_WHITE);
+    }
+
+    else {
+      *shuffleSeed = (int)settings->seed;
+      iSetColor(I_COLOR_GREEN);
+      printf("Seed set to %u.\n\n", settings->seed);
+      iSetColor(I_COLOR_WHITE);
+    }
+
       waitForEnter();
   }
 }
