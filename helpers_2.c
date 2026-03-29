@@ -66,7 +66,10 @@ void shuffle(void *array, size_t n, size_t elem_size, unsigned int seed)
   }
 }
 
-//for design display header
+/**
+ * Displays a decorative header with the given title
+ * @param title The title to display inside the header
+ * (Danieles)*/
 void displayHeader(const char* title)
 {
   printf("\n");
@@ -92,6 +95,11 @@ void displayHeader(const char* title)
   printf("\n");
 }
 
+/**
+ * Converts a color letter to its corresponding Color enum value
+ * @param c Color letter (R, O, Y, G, B, I, V)
+ * @return Corresponding Color enum value (RED, ORANGE, etc.)
+ * (Danieles + Suazon)*/
 Color charToColor(char c)
 {
   Color color;
@@ -117,6 +125,11 @@ Color charToColor(char c)
   return color;
 }
 
+/**
+ * Gets the index of a color from its front letter (0-6)
+ * @param front Color letter (R, O, Y, G, B, I, V)
+ * @return Index from 0 to 6 (R=0, O=1, Y=2, G=3, B=4, I=5, V=6)
+ * (Suazon)*/
 int getColorIndex(char front)
 {
   int index;
@@ -142,6 +155,9 @@ int getColorIndex(char front)
   return index;
 }
 
+/**
+ * Waits for the user to press Enter before continuing
+ * (Danieles + Suazon)*/
 void waitForEnter()
 {
   char c;
@@ -154,8 +170,12 @@ void waitForEnter()
   getchar();
 }
 
-
-// sorts player list by wins
+/**
+ * Sorts player list by number of wins in descending order
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players
+ * @pre players array contains valid player records
+ * (Suazon)*/
 void sortByWins(PlayerRecord players[], int* playerCount) {
   int i, j, max;
   PlayerRecord temp;
@@ -178,7 +198,12 @@ void sortByWins(PlayerRecord players[], int* playerCount) {
   }
 }
 
-// sorts player list by highest score
+/**
+ * Sorts player list by highest score in descending order
+ * @param players Array of player records
+ * @param playerCount Pointer to number of players
+ * @pre players array contains valid player records
+ * (Suazon)*/
 void sortByScores(PlayerRecord players[], int* playerCount) {
   int i, j, max;
   PlayerRecord temp;
@@ -202,7 +227,13 @@ void sortByScores(PlayerRecord players[], int* playerCount) {
   }
 }
 
-
+/**
+ * Finds a player by username in the player records
+ * @param players Array of player records
+ * @param count Number of players in the array
+ * @param username Username to search for
+ * @return Index of player if found, -1 otherwise
+ * (Danieles)*/
 int findPlayer(PlayerRecord players[], int count, const char* username)
 {
   int index = -1;
@@ -218,6 +249,12 @@ int findPlayer(PlayerRecord players[], int count, const char* username)
   return index;
 }
 
+/**
+ * Saves all players to players.txt file
+ * @param players Array of player records
+ * @param count Number of players to save
+ * @return 1 if successful, 0 if error
+ * (Danieles)*/
 int savePlayers(PlayerRecord players[], int count)
 {
   FILE* fp = fopen("players.txt", "w");
@@ -239,7 +276,5 @@ int savePlayers(PlayerRecord players[], int count)
   
   return result;
 }
-
-
 
 #endif // HELPERS_2_C; Include this to prevent redefinition error
